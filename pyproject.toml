@@ -1,0 +1,68 @@
+[build-system]
+requires = ["setuptools>=64", "setuptools_scm[toml]>=8"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "nexus"
+description = "A modular Python-based Discord Bot framework"
+
+dynamic = ["version"]
+license = { text = "LGPL-3.0", url = "https://www.gnu.org/licenses/lgpl-3.0.html" }
+
+readme = "README.md"
+
+authors = [
+  {name = "Tom Groß", email = "tom.gross@udo.edu"}
+]
+maintainers = [
+  {name = "Tom Groß", email = "tom.gross@udo.edu"}
+]
+
+requires-python = ">=3.11"
+classifiers = [
+  "Development Status :: 1 - Planning",
+  "Intended Audience :: Developers",
+  "Topic :: Communications",
+  "Topic :: Software Development :: Libraries :: Python Modules",
+  "License :: OSI Approved :: GNU Lesser General Public License v3 (LGPLv3)",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+  "Programming Language :: Python :: 3.14",
+]
+
+dependencies = [
+    "numpy",
+    "tomli-w",
+    "rich",
+    "click",
+    "rich-click",
+]
+
+[dependency-groups]
+
+all = [
+  {include-group = "dev"},
+  {include-group = "tests"},
+]
+
+dev = [
+  "jupyterlab",
+  "pre-commit"
+]
+
+tests = [
+  "pytest",
+  "pytest-cov",
+  {include-group = "dev"}
+]
+
+[project.urls]
+Repository = "https://github.com/tgross03/nexus"
+
+[tool.setuptools_scm]
+write_to = "nexus/_version.py"
+
+[tool.setuptools.packages.find]
+where = ["."]
