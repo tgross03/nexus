@@ -18,7 +18,7 @@ class MissingKeyPolicy(Enum):
 class TOMLConfiguration:
     def __init__(
         self,
-        path: PathLike,
+        path: PathLike | str,
         create_if_not_exists: bool = False,
         missing_key_policy: MissingKeyPolicy = MissingKeyPolicy.ERROR,
     ):
@@ -28,7 +28,7 @@ class TOMLConfiguration:
         Parameters
         ----------
 
-        path : PathLike
+        path : PathLike | str
             The path to the toml file.
 
         create_if_not_exists : bool, optional
@@ -50,7 +50,7 @@ class TOMLConfiguration:
             )
 
         if not self.exists() and create_if_not_exists:
-            self._path.mkdir(exist_ok=True, parents=True)
+            self._path.parent.mkdir(exist_ok=True, parents=True)
             self._path.touch(exist_ok=True)
 
         self._missing_key_policy: MissingKeyPolicy = (
@@ -70,7 +70,7 @@ class TOMLConfiguration:
         """
         return self._path.exists() and self._path.is_file()
 
-    def __getitem__(self, key: str) -> object:
+    def __getitem__(self, key: str) -> object | dict:
         content = self.asdict()
 
         keys = key.split(".")
