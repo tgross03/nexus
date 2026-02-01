@@ -11,12 +11,8 @@ license = { text = "LGPL-3.0", url = "https://www.gnu.org/licenses/lgpl-3.0.html
 
 readme = "README.md"
 
-authors = [
-  {name = "Tom Groß", email = "tom.gross@udo.edu"}
-]
-maintainers = [
-  {name = "Tom Groß", email = "tom.gross@udo.edu"}
-]
+authors = [{ name = "Tom Groß", email = "tom.gross@udo.edu" }]
+maintainers = [{ name = "Tom Groß", email = "tom.gross@udo.edu" }]
 
 requires-python = ">=3.11"
 classifiers = [
@@ -33,36 +29,35 @@ classifiers = [
 ]
 
 dependencies = [
-    "numpy",
-    "tomli-w",
-    "rich",
-    "click",
-    "rich-click",
+  "discord.py",
+  "aioconsole",
+  "numpy",
+  "tomli-w",
+  "rich",
+  "click",
+  "rich-click",
+  "catppuccin",
+  "mergedeep",
+  "fuzzyfinder",
 ]
 
 [dependency-groups]
 
-all = [
-  {include-group = "dev"},
-  {include-group = "tests"},
-]
+all = [{ include-group = "dev" }, { include-group = "tests" }]
 
-dev = [
-  "jupyterlab",
-  "pre-commit"
-]
+dev = ["jupyterlab", "pre-commit"]
 
-tests = [
-  "pytest",
-  "pytest-cov",
-  {include-group = "dev"}
-]
+tests = ["pytest", "pytest-cov", { include-group = "dev" }]
 
 [project.urls]
 Repository = "https://github.com/tgross03/nexus"
+Documentation = "https://github.com/tgross03/nexus"
 
 [tool.setuptools_scm]
 write_to = "nexus/_version.py"
 
 [tool.setuptools.packages.find]
 where = ["."]
+
+[project.scripts]
+nexus = "nexus.cli.cli:entry_point"

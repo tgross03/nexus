@@ -70,7 +70,7 @@ class TOMLConfiguration:
         """
         return self._path.exists() and self._path.is_file()
 
-    def __getitem__(self, key: str) -> object | dict:
+    def __getitem__(self, key: str):
         content = self.asdict()
 
         keys = key.split(".")
@@ -129,6 +129,39 @@ class TOMLConfiguration:
             content = content[key]
 
         return True
+
+    def get_keys(self, non_dict_only: bool = False) -> list[str]:
+        """
+        Provides a list of all keys in the configuration file.
+
+        Parameters
+        ----------
+
+        non_dict_only : bool, optional
+            Whether only to show the keys for variables and not for
+            sections of the configuration file.
+            Default is ``True``.
+
+        Returns
+        -------
+
+        list[str] : A list of keys in the file.
+
+        """
+
+        def recursive_keys(dictionary: dict, parent: str | None = None) -> list[str]:
+            keys = []
+            for key, value in dictionary.items():
+                parent_key = f"{parent}.{key}" if parent is not None else key
+                if isinstance(value, dict):
+                    if not non_dict_only:
+                        keys.append(key)
+                    keys.extend(recursive_keys(dictionary=value, parent=parent_key))
+                else:
+                    keys.append(parent_key)
+            return keys
+
+        return recursive_keys(dictionary=self.asdict())
 
     def asdict(self) -> dict:
         """
