@@ -1,1 +1,1 @@
-# nexus [![pre-commit.ci status](https://results.pre-commit.ci/badge/github/tgross03/nexus/main.svg)](https://results.pre-commit.ci/latest/github/tgross03/nexus/main) [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
+# nexus [![pre-commit.ci status](https://results.pre-commit.ci/badge/github/tgross03/nexus/main.svg)](https://results.pre-commit.ci/latest/github/tgross03/nexus/main) [![License: GPL v3](https://img.shields.io/badge/License-LGPLv3-blue.svg)](https://www.gnu.org/licenses/lgpl-3.0)
