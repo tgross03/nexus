@@ -43,21 +43,28 @@ class TOMLConfiguration:
 
         self._path: Path = Path(path)
 
-        if self._path.suffix != ".toml":
+        if self._path.exists() and self._path.suffix != ".toml":
             raise InvalidConfigurationError(
                 "The given file has an incorrect file suffix "
                 f"(is '{self._path.suffix}')! Has to be 'toml'"
             )
 
         if not self.exists() and create_if_not_exists:
-            self._path.parent.mkdir(exist_ok=True, parents=True)
-            self._path.touch(exist_ok=True)
+            self.create()
 
         self._missing_key_policy: MissingKeyPolicy = (
             missing_key_policy
             if isinstance(missing_key_policy, MissingKeyPolicy)
             else MissingKeyPolicy[missing_key_policy]
         )
+
+    def create(self) -> None:
+        """
+        Creates an empty TOML file at the config path.
+        """
+
+        self._path.parent.mkdir(exist_ok=True, parents=True)
+        self._path.touch(exist_ok=True)
 
     def exists(self) -> bool:
         """
@@ -97,21 +104,27 @@ class TOMLConfiguration:
 
         content_dict = content
         for kidx, key in zip(range(len(keys)), keys):
-            if not isinstance(content_dict, dict) or key not in content_dict:
+            if not isinstance(content_dict, dict):
                 raise KeyError(f"Invalid key: '{key}'")
 
             if kidx == len(keys) - 1:
-                if (
-                    isinstance(content_dict[key], dict) and not isinstance(value, dict)
-                ) or (
-                    isinstance(value, dict) and not isinstance(content_dict[key], dict)
-                ):
-                    raise TypeError(
-                        "The type of the value that to be set must be the "
-                        "same of the current value!"
-                    )
+                if key in content_dict:
+                    if (
+                        isinstance(content_dict[key], dict)
+                        and not isinstance(value, dict)
+                    ) or (
+                        isinstance(value, dict)
+                        and not isinstance(content_dict[key], dict)
+                    ):
+                        raise TypeError(
+                            "The type of the value that to be set must be the "
+                            "same of the current value!"
+                        )
 
-                content_dict[key] = value
+                if value is not None:
+                    content_dict[key] = value
+                else:
+                    del content_dict[key]
             else:
                 content_dict = content_dict[key]
 
@@ -119,6 +132,9 @@ class TOMLConfiguration:
             tomli_w.dump(content, tomlf)
 
     def __contains__(self, key: str) -> bool:
+        if not self.exists():
+            return False
+
         content = self.asdict()
         keys = key.split(".")
 

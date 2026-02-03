@@ -1,6 +1,8 @@
 from . import version
 from rich import traceback
 
-traceback.install(show_locals=False)
+from nexus.core import VariableLibrary
+
+traceback.install(show_locals=VariableLibrary.get_variable("exceptions.show_locals"))
 
 __version__ = version.__version__

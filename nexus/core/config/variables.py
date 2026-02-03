@@ -43,6 +43,9 @@ class VariableLibrary:
                 "color_palette": "latte",
                 "rich": {"palette": "solarized", "style": "box"},
             },
+            "exceptions": {
+                "show_locals": False,
+            },
         }
 
         self._config.dump(

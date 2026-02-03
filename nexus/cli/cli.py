@@ -11,6 +11,7 @@ from nexus.cli.colors import EFFECTS, RESET, get_default_palette
 from nexus.core.config import TOMLConfiguration
 
 from .config import commands as config
+from .service import commands as service
 
 palette = get_default_palette()
 
@@ -104,3 +105,4 @@ def entry_point(**kwargs):
 
 
 entry_point.add_command(config.command)
+entry_point.add_command(service.command)
