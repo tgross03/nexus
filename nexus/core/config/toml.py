@@ -43,7 +43,7 @@ class TOMLConfiguration:
 
         self._path: Path = Path(path)
 
-        if self._path.exists() and self._path.suffix != ".toml":
+        if self._path.suffix.lower() != ".toml":
             raise InvalidConfigurationError(
                 "The given file has an incorrect file suffix "
                 f"(is '{self._path.suffix}')! Has to be 'toml'"
