@@ -4,6 +4,7 @@ from pathlib import Path
 
 from nexus.core.bot.manager import BotManager
 from nexus.core.config import TOMLConfiguration
+from nexus.core.exceptions.services import InvalidServiceError, ServiceExistsError
 from nexus.core.module.manager import ModuleManager
 from nexus.core.plugin.manager import PluginManager
 from nexus.core.service.register import ServiceRegister
@@ -64,6 +65,15 @@ class Service:
         )
 
     def initialize(self) -> None:
+
+        try:
+            ServiceRegister().get_service_by_name(name=self._name)
+            raise ServiceExistsError(
+                f"There already exists a service with name '{self._name}'!"
+            )
+        except InvalidServiceError:
+            pass
+
         self._uuid = uuid.uuid4()
 
         self._root_dir.mkdir()
@@ -89,4 +99,17 @@ class Service:
     @classmethod
     def from_path(cls, path: PathLike | str) -> "Service":
         path = Path(path)
-        return cls(name=path.name, parent_dir=path.parent)
+        instance = cls(name=path.name, parent_dir=path.parent)
+
+        if not instance.is_valid():
+            raise InvalidServiceError(f"There is no valid service at path {path}!")
+
+        return instance
+
+    @classmethod
+    def from_name(cls, name: str) -> "Service":
+        return ServiceRegister().get_service_by_name(name=name)
+
+    @classmethod
+    def from_uuid(cls, unique_id: uuid.UUID | str) -> "Service":
+        return ServiceRegister().get_service_by_uuid(unique_id=unique_id)

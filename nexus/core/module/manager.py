@@ -52,7 +52,7 @@ class ModuleManager:
                     )
                 )
 
-                if not module_obj.is_optional() or module_obj._name in load_modules:
+                if not module_obj.is_optional() or module_name in load_modules:
                     self._modules[module_obj._name] = module_obj
             except ImportError:
                 continue

@@ -2,6 +2,7 @@ import tomllib
 from enum import Enum
 from os import PathLike
 from pathlib import Path
+from typing import Any
 
 import tomli_w
 
@@ -77,7 +78,7 @@ class TOMLConfiguration:
         """
         return self._path.exists() and self._path.is_file()
 
-    def __getitem__(self, key: str):
+    def __getitem__(self, key: str) -> Any:
         content = self.asdict()
 
         keys = key.split(".")
@@ -97,7 +98,7 @@ class TOMLConfiguration:
             case MissingKeyPolicy.RETURN_NONE:
                 return None
 
-    def __setitem__(self, key: str, value: object) -> None:
+    def __setitem__(self, key: str, value: Any) -> None:
         content = self.asdict()
 
         keys = key.split(".")
@@ -179,7 +180,7 @@ class TOMLConfiguration:
 
         return recursive_keys(dictionary=self.asdict())
 
-    def asdict(self) -> dict:
+    def asdict(self) -> dict[str, Any]:
         """
         Provides the content of the TOML file as a dictionary.
 
@@ -193,7 +194,7 @@ class TOMLConfiguration:
 
         return content
 
-    def dump(self, content: dict) -> None:
+    def dump(self, content: dict[str, Any]) -> None:
         """
         Dumps the given dictionary as content into the TOML file.
 

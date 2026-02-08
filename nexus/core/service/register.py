@@ -5,6 +5,7 @@ from pathlib import Path
 from typing import TYPE_CHECKING
 
 from nexus.core.config.toml import TOMLConfiguration
+from nexus.core.exceptions.services import InvalidServiceError
 
 if TYPE_CHECKING:
     from nexus.core.service.service import Service
@@ -33,7 +34,9 @@ class ServiceRegister:
         self._config.dump({})
 
     def register(self, service: Service) -> None:
-        self._config[f"services.{str(service._uuid)}"] = str(service._root_dir)
+        self._config[f"services.{str(service._uuid)}"] = str(
+            service._root_dir.resolve()
+        )
 
     def unregister(self, unique_id: uuid.UUID | str) -> None:
         self._config[f"services.{str(unique_id)}"] = None
@@ -42,10 +45,18 @@ class ServiceRegister:
         from nexus.core.service.service import Service
 
         unique_id = uuid.UUID(unique_id) if isinstance(unique_id, str) else unique_id
-        return Service.from_path(self._config["services"][str(unique_id)])
+
+        try:
+            service = Service.from_path(self._config["services"][str(unique_id)])
+        except KeyError:
+            raise InvalidServiceError(
+                f"There is no service registered with UUID {unique_id}"
+            )
+
+        return service
 
     def get_service_by_name(self, name: str) -> Service:
         for service in self.get_services():
             if service._name == name:
                 return service
-        raise KeyError(f"Unknown name: {name}")
+        raise InvalidServiceError(f"There is no service registered with name {name}!")

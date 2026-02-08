@@ -36,6 +36,26 @@ def set_value(key: str, value: str, force: bool, debug: bool) -> None:
     try:
         prev_value = VariableLibrary.get_variable(key=key)
 
+        if isinstance(prev_value, bool):
+            if value.lower() == "true":
+                value = True
+            elif value.lower() == "false":
+                value = False
+            else:
+                raise TypeError(
+                    "The given value has to be boolean type (e.g. 'true' or 'false')!"
+                )
+        elif isinstance(prev_value, int):
+            try:
+                value = int(value)
+            except ValueError:
+                raise TypeError("The given value has to be integer type (e.g. '1').")
+        elif isinstance(prev_value, float):
+            try:
+                value = float(value)
+            except ValueError:
+                raise TypeError("The given value has to be float type (e.g. '1.0').")
+
         if prev_value == value:
             print(
                 f"{palette.red}ERROR: {palette.maroon}The variable is already set "
@@ -65,7 +85,7 @@ def set_value(key: str, value: str, force: bool, debug: bool) -> None:
         return print_error_message(
             error=InvalidConfigurationError(
                 "A severe problem occurred because the variable configuration could not be found! "
-                "Use the 'backpy config regenerate' command to regenerate it."
+                "Use the 'nexus config regenerate' command to regenerate it."
             ),
             debug=debug,
         )
