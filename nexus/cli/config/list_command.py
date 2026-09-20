@@ -37,7 +37,7 @@ def list_variables(key: str | None, debug: bool) -> None:
         return print_error_message(
             error=InvalidConfigurationError(
                 "A severe problem occurred because the variable configuration could not be found! "
-                "Use the 'backpy config regenerate' command to regenerate it."
+                "Use the 'nexus config reset' command to regenerate it."
             ),
             debug=debug,
         )

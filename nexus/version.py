@@ -14,7 +14,7 @@ except Exception:
 
     warnings.warn(
         "Could not determine nexus version. This indicates"
-        " a broken installation. Please install backpy from"
+        " a broken installation. Please install nexus from"
         " the local git repository or via pip."
     )
     del warnings

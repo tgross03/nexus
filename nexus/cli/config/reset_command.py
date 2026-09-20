@@ -12,7 +12,7 @@ palette = get_default_palette()
 
 @click.command(
     "reset",
-    help="Reset the variable configuration of backpy to its default state.",
+    help="Reset the variable configuration of nexus to its default state.",
 )
 @click.option(
     "--force",

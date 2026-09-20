@@ -91,14 +91,14 @@ def _create_epilog(short):
     is_flag=True,
     is_eager=True,
     callback=_print_version,
-    help="Displays the current version of backpy.",
+    help="Displays the current version of nexus.",
 )
 @click.option(
     "--info",
     is_flag=True,
     is_eager=False,
     callback=_print_info,
-    help="Displays some information about backpy.",
+    help="Displays some information about nexus.",
 )
 def entry_point(**kwargs):
     pass
