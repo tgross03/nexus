@@ -2,8 +2,7 @@ from pathlib import Path
 
 import rich_click as click
 
-from nexus.core.exceptions.services import ServiceExistsError
-from nexus.core.service.register import ServiceRegister
+from nexus.cli.elements import print_error_message
 from nexus.core.service.service import Service
 
 
@@ -25,16 +24,26 @@ from nexus.core.service.service import Service
     default=None,
     type=click.Path(exists=True, dir_okay=False, file_okay=True, path_type=Path),
 )
-def init(name: str, path: Path, import_config: Path | None) -> None:
-    try:
-        ServiceRegister().get_service_by_name(name=name)
-        raise ServiceExistsError(
-            "There is already a service with this name! Service names have to be unique."
-        )
-    except KeyError:
-        pass
-
+@click.option(
+    "--debug",
+    "-d",
+    is_flag=True,
+    help="Activate the debug log for the command "
+    "to print full error traces in case of a problem.",
+)
+@click.option(
+    "--verbose",
+    "-v",
+    count=True,
+    help="Sets the verbosity level of the output.",
+)
+def init(
+    name: str, path: Path, import_config: Path | None, debug: bool, verbose: int
+) -> None:
     service = Service(name=name, parent_dir=path)
-    service.initialize()
+    try:
+        service.initialize(verbose=verbose)
+    except Exception as e:
+        return print_error_message(error=e, debug=debug)
 
     return None

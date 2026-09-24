@@ -64,7 +64,7 @@ class Service:
             and (self._root_dir / "config/plugins").exists()
         )
 
-    def initialize(self) -> None:
+    def initialize(self, verbose: int = 1) -> None:
 
         try:
             ServiceRegister().get_service_by_name(name=self._name)
@@ -74,7 +74,13 @@ class Service:
         except InvalidServiceError:
             pass
 
+        if verbose >= 2:
+            print("Service not already initialized.")
+
         self._uuid = uuid.uuid4()
+
+        if verbose >= 3:
+            print(f"Assigned UUID {self._uuid}.")
 
         self._root_dir.mkdir()
         (self._root_dir / "plugins").mkdir()
@@ -82,6 +88,9 @@ class Service:
 
         (self._root_dir / "config/modules").mkdir()
         (self._root_dir / "config/plugins").mkdir()
+
+        if verbose >= 2:
+            print(f"Created main directory {self._root_dir} and subdirectories.")
 
         self._main_config.create()
 
@@ -94,7 +103,14 @@ class Service:
         self._bot_manager.reset_config()
         self._module_manager.reset_config()
         self._plugin_manager.reset_config()
+
+        if verbose >= 2:
+            print("Created default configs.")
+
         ServiceRegister().register(self)
+
+        if verbose >= 1:
+            print(f"Registered service '{self._name}' (UUID: {self._uuid}).")
 
     @classmethod
     def from_path(cls, path: PathLike | str) -> "Service":
